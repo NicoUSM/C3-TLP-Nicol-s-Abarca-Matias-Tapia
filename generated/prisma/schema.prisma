@@ -1,0 +1,76 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+model Perfil {
+  id       Int       @id @default(autoincrement())
+  nombre   String    @db.VarChar(50)
+  usuarios Usuario[]
+}
+
+model Usuario {
+  id            Int        @id @default(autoincrement())
+  identificador String     @unique @db.VarChar(100)
+  nombre        String     @db.VarChar(100)
+  password      String     @db.VarChar(60)
+  perfilId      Int
+  perfil        Perfil     @relation(fields: [perfilId], references: [id])
+  arriendos     Arriendo[]
+
+  @@index([perfilId])
+}
+
+model Tipo {
+  id          Int        @id @default(autoincrement())
+  nombre      String     @db.VarChar(50)
+  descripcion String?    @db.VarChar(255)
+  vehiculos   Vehiculo[]
+}
+
+model Vehiculo {
+  id          Int        @id @default(autoincrement())
+  patente     String     @unique @db.VarChar(10)
+  marca       String     @db.VarChar(50)
+  modelo      String     @db.VarChar(50)
+  valorDiario Int
+  estado      String     @db.VarChar(50)
+  fotografia  String     @db.VarChar(255)
+  tipoId      Int
+  tipo        Tipo       @relation(fields: [tipoId], references: [id])
+  arriendos   Arriendo[]
+
+  @@index([tipoId])
+}
+
+model Arriendo {
+  id                 Int       @id @default(autoincrement())
+  rutCliente         String    @db.VarChar(12)
+  nombreCliente      String    @db.VarChar(100)
+  fechaInicio        DateTime
+  fechaTermino       DateTime
+  fechaHoraEntrega   DateTime?
+  fechaHoraRecepcion DateTime?
+  fotoEntrega        String?   @db.VarChar(255)
+  fotoRecepcion      String?   @db.VarChar(255)
+  usuarioId          Int
+  usuario            Usuario   @relation(fields: [usuarioId], references: [id])
+  vehiculoId         Int
+  vehiculo           Vehiculo  @relation(fields: [vehiculoId], references: [id])
+
+  @@index([usuarioId])
+  @@index([vehiculoId])
+}
+
+model Cliente {
+  id        Int     @id @default(autoincrement())
+  rut       String  @unique @db.VarChar(12)
+  nombre    String  @db.VarChar(100)
+  telefono  String? @db.VarChar(20)
+  email     String? @db.VarChar(100)
+  direccion String? @db.VarChar(150)
+}

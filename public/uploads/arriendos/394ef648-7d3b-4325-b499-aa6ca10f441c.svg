@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="360" viewBox="0 0 640 360" role="img" aria-label="Hyundai Tucson">
+  <defs>
+    <linearGradient id="g" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#fee2e2"/>
+      <stop offset="100%" stop-color="#fca5a5"/>
+    </linearGradient>
+  </defs>
+  <rect width="640" height="360" rx="28" fill="url(#g)"/>
+  <rect x="58" y="104" width="524" height="136" rx="30" fill="#7f1d1d" opacity="0.95"/>
+  <circle cx="178" cy="256" r="34" fill="#111827"/>
+  <circle cx="462" cy="256" r="34" fill="#111827"/>
+  <circle cx="178" cy="256" r="18" fill="#d1d5db"/>
+  <circle cx="462" cy="256" r="18" fill="#d1d5db"/>
+  <text x="50%" y="82" text-anchor="middle" font-family="Arial, sans-serif" font-size="30" font-weight="700" fill="#450a0a">Hyundai Tucson</text>
+  <text x="50%" y="320" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" fill="#450a0a">Auto de ejemplo para AutoRent</text>
+</svg>
