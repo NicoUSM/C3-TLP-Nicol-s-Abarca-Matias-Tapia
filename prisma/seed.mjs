@@ -4,7 +4,7 @@ import bcrypt from 'bcryptjs'
 import { PrismaMariaDb } from '@prisma/adapter-mariadb'
 import { PrismaClient } from '../generated/prisma/index.js'
 
-dotenv.config({ path: path.resolve(process.cwd(), 'conexion.env') })
+dotenv.config({ path: path.resolve(process.cwd(), 'conexion.env'), override: true })
 
 const adapter = new PrismaMariaDb(process.env.DATABASE_URL)
 const prisma = new PrismaClient({ adapter })
@@ -46,10 +46,10 @@ const main = async () => {
   const passwordHash = await bcrypt.hash('123456', 10)
 
   await prisma.usuario.upsert({
-    where: { identificador: 'admin@autorent.cl' },
+    where: { identificador: 'admin@sansatormotors.cl' },
     update: {},
     create: {
-      identificador: 'admin@autorent.cl',
+      identificador: 'admin@sansatormotors.cl',
       nombre: 'Carlos Iturra',
       password: passwordHash,
       perfilId: administrador.id,
@@ -57,10 +57,10 @@ const main = async () => {
   })
 
   const usuarioEjecutivo = await prisma.usuario.upsert({
-    where: { identificador: 'ejecutivo@autorent.cl' },
+    where: { identificador: 'ejecutivo@sansatormotors.cl' },
     update: {},
     create: {
-      identificador: 'ejecutivo@autorent.cl',
+      identificador: 'ejecutivo@sansatormotors.cl',
       nombre: 'Ana Gómez',
       password: passwordHash,
       perfilId: ejecutivo.id,

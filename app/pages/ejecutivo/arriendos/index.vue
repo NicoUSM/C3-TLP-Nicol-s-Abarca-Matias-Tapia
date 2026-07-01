@@ -219,68 +219,87 @@ const createArriendo = async () => {
             </div>
 
             <div class="xl:col-span-2 bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-                <div class="p-4 bg-gray-50 border-b flex justify-between items-center">
-                    <h2 class="font-semibold text-gray-700">Historial y Vigentes</h2>
+                <div class="p-4 bg-gray-50 border-b flex flex-col lg:flex-row justify-between lg:items-center gap-3">
+                    <div>
+                        <h2 class="font-semibold text-gray-700">Historial y Vigentes</h2>
+                        <p class="text-xs text-gray-500">{{ filteredArriendos.length }} arriendo{{
+                            filteredArriendos.length === 1 ? '' : 's' }} encontrado{{ filteredArriendos.length === 1 ?
+                            '' : 's' }}</p>
+                    </div>
 
-                    <div class="flex gap-2">
+                    <div class="flex flex-col sm:flex-row gap-2">
                         <select v-model="estadoFiltro"
-                            class="border border-gray-300 rounded-lg p-1.5 text-sm outline-none bg-white">
+                            class="w-full sm:w-auto border border-gray-300 rounded-lg p-1.5 text-sm outline-none bg-white">
                             <option value="todos">Todos los estados</option>
                             <option value="vigentes">Solo Vigentes</option>
                             <option value="finalizados">Solo Finalizados</option>
                         </select>
                         <input v-model="search" type="text" placeholder="Buscar ID o Patente..."
-                            class="border border-gray-300 rounded-lg p-1.5 text-sm focus:ring-2 focus:ring-orange-500 outline-none" />
+                            class="w-full sm:w-56 border border-gray-300 rounded-lg p-1.5 text-sm focus:ring-2 focus:ring-orange-500 outline-none" />
                     </div>
                 </div>
 
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left text-sm text-gray-600">
-                        <thead class="bg-white text-xs uppercase text-gray-500 font-bold border-b">
-                            <tr>
-                                <th class="p-4">ID</th>
-                                <th class="p-4">Detalle</th>
-                                <th class="p-4 text-center">Período</th>
-                                <th class="p-4 text-right">Valor</th>
-                                <th class="p-4 text-center">Estado</th>
-                                <th class="p-4 text-center">Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-gray-100">
-                            <tr v-for="arriendo in filteredArriendos" :key="arriendo.id"
-                                class="hover:bg-gray-50 transition-colors">
-                                <td class="p-4 font-mono font-medium text-gray-900">#{{ arriendo.id }}</td>
-                                <td class="p-4">
-                                    <p class="font-semibold text-gray-800">{{ arriendo.vehiculo }} <span
-                                            class="font-normal text-gray-500 font-mono">({{ arriendo.patente }})</span>
-                                    </p>
-                                    <p class="text-xs text-gray-500">Cliente: {{ arriendo.cliente }}</p>
-                                </td>
-                                <td class="p-4 text-center text-xs">
-                                    <div>{{ arriendo.fechaInicio }}</div>
-                                    <div class="text-gray-400">hasta</div>
-                                    <div>{{ arriendo.fechaFin }}</div>
-                                </td>
-                                <td class="p-4 text-right font-semibold text-gray-900">${{
-                                    arriendo.total.toLocaleString('es-CL') }}</td>
-                                <td class="p-4 text-center">
-                                    <span class="px-2 py-1 rounded-full text-xs font-semibold"
-                                        :class="arriendo.estado === 'Vigente' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600'">
-                                        {{ arriendo.estado }}
-                                    </span>
-                                </td>
-                                <td class="p-4 text-center">
-                                    <NuxtLink :to="`/ejecutivo/arriendos/${arriendo.id}`"
-                                        class="text-orange-600 hover:text-orange-800 hover:underline text-xs font-semibold">
-                                        Ver Detalle / Devolución
-                                    </NuxtLink>
-                                </td>
-                            </tr>
-                            <tr v-if="filteredArriendos.length === 0">
-                                <td colspan="6" class="p-6 text-center text-gray-500">No hay arriendos registrados.</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div class="max-h-136 space-y-3 overflow-y-auto p-4 pr-3 lg:max-h-[calc(100vh-18rem)]">
+                    <article v-for="arriendo in filteredArriendos" :key="arriendo.id"
+                        class="rounded-xl border border-gray-200 bg-white p-4 shadow-sm transition hover:border-orange-200 hover:shadow-md">
+                        <div class="space-y-4">
+                            <div class="flex items-start gap-4 min-w-0">
+                                <div
+                                    class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-orange-100 font-mono text-sm font-bold text-orange-700">
+                                    #{{ arriendo.id }}
+                                </div>
+
+                                <div class="min-w-0 flex-1 space-y-3">
+                                    <div
+                                        class="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between sm:gap-4">
+                                        <h3 class="font-semibold text-gray-900 wrap-anywhere">{{ arriendo.vehiculo }}
+                                        </h3>
+                                        <p class="font-mono text-sm text-gray-500">{{ arriendo.patente }}</p>
+                                    </div>
+
+                                    <div class="grid gap-3 text-sm text-gray-600 md:grid-cols-2">
+                                        <div class="space-y-1 min-w-0">
+                                            <p class="text-xs font-semibold uppercase text-gray-400">Cliente</p>
+                                            <p class="font-medium text-gray-700 wrap-anywhere">{{ arriendo.cliente }}
+                                            </p>
+                                            <p class="font-mono text-xs text-gray-500 wrap-anywhere">{{ arriendo.rut }}
+                                            </p>
+                                        </div>
+
+                                        <div class="space-y-1 min-w-0 md:text-right">
+                                            <p class="text-xs font-semibold uppercase text-gray-400">Período</p>
+                                            <p class="text-sm text-gray-700">{{ arriendo.fechaInicio }}</p>
+                                            <p class="text-xs text-gray-400">hasta</p>
+                                            <p class="text-sm text-gray-700">{{ arriendo.fechaFin }}</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="flex flex-wrap items-center gap-2">
+                                        <span class="px-2.5 py-1 rounded-full text-xs font-semibold"
+                                            :class="arriendo.estado === 'Vigente' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600'">
+                                            {{ arriendo.estado }}
+                                        </span>
+                                        <span
+                                            class="px-2.5 py-1 rounded-full bg-slate-100 text-xs font-semibold text-slate-700">
+                                            ${{ arriendo.total.toLocaleString('es-CL') }}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="flex justify-end border-t border-gray-100 pt-3">
+                                <NuxtLink :to="`/ejecutivo/arriendos/${arriendo.id}`"
+                                    class="rounded-lg border border-orange-200 px-3 py-1.5 text-xs font-semibold text-orange-700 transition hover:bg-orange-50">
+                                    Ver Detalle / Devolución
+                                </NuxtLink>
+                            </div>
+                        </div>
+                    </article>
+
+                    <div v-if="filteredArriendos.length === 0"
+                        class="rounded-xl border border-dashed border-gray-300 bg-gray-50 p-6 text-center text-sm text-gray-500">
+                        No hay arriendos registrados.
+                    </div>
                 </div>
             </div>
         </div>

@@ -1,3 +1,7 @@
+import dotenv from 'dotenv'
+
+dotenv.config({ path: 'conexion.env', override: true })
+
 export default defineNuxtConfig({
   modules: ['@nuxt/ui', 'nuxt-auth-utils'],
 

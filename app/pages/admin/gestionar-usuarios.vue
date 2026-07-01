@@ -211,7 +211,7 @@ const removeUser = async (userId: number) => {
 
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Correo Electrónico (Único)</label>
-                        <input v-model="createForm.email" type="email" placeholder="usuario@autorent.cl"
+                        <input v-model="createForm.email" type="email" placeholder="usuario@sansatormotors.cl"
                             class="w-full border border-gray-300 rounded-lg p-2 text-sm focus:ring-2 focus:ring-orange-500 outline-none"
                             required />
                     </div>
@@ -252,55 +252,72 @@ const removeUser = async (userId: number) => {
             </div>
 
             <div class="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-                <div class="p-4 bg-gray-50 border-b flex justify-between items-center">
-                    <h2 class="font-semibold text-gray-700">Usuarios Activos</h2>
+                <div class="p-4 bg-gray-50 border-b flex flex-col sm:flex-row justify-between sm:items-center gap-3">
+                    <div>
+                        <h2 class="font-semibold text-gray-700">Usuarios Activos</h2>
+                        <p class="text-xs text-gray-500">{{ filteredUsuarios.length }} usuario{{ filteredUsuarios.length
+                            === 1 ? '' : 's' }} encontrado{{ filteredUsuarios.length === 1 ? '' : 's' }}</p>
+                    </div>
                     <input v-model="search" type="text" placeholder="Buscar por email..."
-                        class="border border-gray-300 rounded-lg p-1.5 text-sm focus:ring-2 focus:ring-orange-500 outline-none" />
+                        class="w-full sm:w-64 border border-gray-300 rounded-lg p-1.5 text-sm focus:ring-2 focus:ring-orange-500 outline-none" />
                 </div>
 
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left text-sm text-gray-600">
-                        <thead class="bg-white text-xs uppercase text-gray-500 font-bold border-b">
-                            <tr>
-                                <th class="p-4">Usuario</th>
-                                <th class="p-4">Perfil</th>
-                                <th class="p-4 text-center">Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-gray-100">
+                <div class="max-h-136 space-y-3 overflow-y-auto p-4 pr-3 lg:max-h-[calc(100vh-18rem)]">
+                    <article v-for="user in filteredUsuarios" :key="user.id"
+                        class="rounded-xl border border-gray-200 bg-white p-4 shadow-sm transition hover:border-orange-200 hover:shadow-md">
+                        <div class="space-y-4">
+                            <div class="flex items-start gap-4 min-w-0">
+                                <div
+                                    class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-orange-100 text-sm font-bold text-orange-700">
+                                    {{ user.nombre.slice(0, 2).toUpperCase() }}
+                                </div>
+                                <div class="min-w-0 flex-1 space-y-2">
+                                    <div
+                                        class="grid gap-1 sm:grid-cols-[auto_minmax(0,1fr)] sm:items-baseline sm:gap-4">
+                                        <h3 class="font-semibold text-gray-900">{{ user.nombre }}</h3>
+                                        <p class="min-w-0 text-sm leading-5 text-gray-500 wrap-anywhere sm:text-right"
+                                            :title="user.email">{{ user.email }}</p>
+                                    </div>
+                                    <div class="flex flex-wrap items-center gap-2">
+                                        <span v-if="currentUser && user.id === currentUser.id"
+                                            class="rounded-full bg-slate-100 px-2 py-0.5 text-[11px] font-semibold text-slate-600">
+                                            Tu cuenta
+                                        </span>
+                                        <span class="w-fit px-2.5 py-1 rounded-full text-xs font-semibold"
+                                            :class="user.perfil === 'Administrador' ? 'bg-purple-100 text-purple-700' : 'bg-amber-100 text-amber-700'">
+                                            {{ user.perfil }}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
 
-                            <tr v-for="user in filteredUsuarios" :key="user.id"
-                                class="hover:bg-gray-50 transition-colors">
-                                <td class="p-4">
-                                    <p class="font-semibold text-gray-900">{{ user.nombre }}</p>
-                                    <p class="text-xs text-gray-500">{{ user.email }}</p>
-                                </td>
-                                <td class="p-4">
-                                    <span class="px-2.5 py-1 rounded-full text-xs font-semibold"
-                                        :class="user.perfil === 'Administrador' ? 'bg-purple-100 text-purple-700' : 'bg-amber-100 text-amber-700'">
-                                        {{ user.perfil }}
-                                    </span>
-                                </td>
-                                <td class="p-4 flex justify-center items-center gap-3 h-full pt-6">
+                            <div class="flex justify-end border-t border-gray-100 pt-3">
+                                <div class="flex flex-wrap items-center justify-end gap-2">
                                     <button type="button" @click="startEdit(user)"
-                                        class="text-orange-600 hover:text-orange-800 hover:underline text-xs font-semibold">Editar</button>
+                                        class="rounded-lg border border-orange-200 px-3 py-1.5 text-xs font-semibold text-orange-700 transition hover:bg-orange-50">
+                                        Editar
+                                    </button>
 
                                     <button v-if="currentUser && user.id !== currentUser.id" type="button"
                                         @click="removeUser(user.id)"
-                                        class="text-red-600 hover:text-red-800 hover:underline text-xs font-semibold">
+                                        class="rounded-lg border border-red-200 px-3 py-1.5 text-xs font-semibold text-red-700 transition hover:bg-red-50">
                                         Borrar
                                     </button>
 
-                                    <span v-else class="text-xs text-gray-400 italic"
+                                    <span v-else
+                                        class="rounded-lg bg-gray-100 px-3 py-1.5 text-xs font-semibold text-gray-400"
                                         title="No puedes borrar tu propia cuenta">
-                                        Tú
+                                        Protegido
                                     </span>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
 
-                                </td>
-                            </tr>
-
-                        </tbody>
-                    </table>
+                    <div v-if="filteredUsuarios.length === 0"
+                        class="rounded-xl border border-dashed border-gray-300 bg-gray-50 p-6 text-center text-sm text-gray-500">
+                        No hay usuarios que coincidan con la búsqueda.
+                    </div>
                 </div>
             </div>
 
@@ -320,7 +337,7 @@ const removeUser = async (userId: number) => {
                 <form class="space-y-4" @submit.prevent="updateUser">
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Correo Electrónico (Único)</label>
-                        <input v-model="editForm.email" type="email" placeholder="usuario@autorent.cl"
+                        <input v-model="editForm.email" type="email" placeholder="usuario@sansatormotors.cl"
                             class="w-full border border-gray-300 rounded-lg p-2 text-sm focus:ring-2 focus:ring-orange-500 outline-none"
                             required />
                     </div>

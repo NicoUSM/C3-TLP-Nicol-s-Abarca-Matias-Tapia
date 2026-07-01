@@ -33,7 +33,9 @@ const filteredTipos = computed(() => {
         return tipos.value ?? []
     }
 
-    return (tipos.value ?? []).filter((tipo) => tipo.nombre.toLowerCase().includes(term))
+    return (tipos.value ?? []).filter((tipo) => {
+        return [tipo.nombre, tipo.descripcion ?? ''].some((value) => value.toLowerCase().includes(term))
+    })
 })
 
 // Nombre: resetCreateForm
@@ -198,37 +200,61 @@ const removeTipo = async (tipoId: number) => {
             </div>
 
             <div class="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-                <div class="p-4 bg-gray-50 border-b">
-                    <h2 class="font-semibold text-gray-700">Categorías Registradas</h2>
+                <div class="p-4 bg-gray-50 border-b flex flex-col sm:flex-row justify-between sm:items-center gap-3">
+                    <div>
+                        <h2 class="font-semibold text-gray-700">Categorías Registradas</h2>
+                        <p class="text-xs text-gray-500">{{ filteredTipos.length }} categoría{{ filteredTipos.length ===
+                            1 ? '' : 's' }} encontrada{{ filteredTipos.length === 1 ? '' : 's' }}</p>
+                    </div>
+                    <input v-model="search" type="text" placeholder="Buscar categoría..."
+                        class="w-full sm:w-64 border border-gray-300 rounded-lg p-1.5 text-sm focus:ring-2 focus:ring-orange-500 outline-none" />
                 </div>
 
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left text-sm text-gray-600">
-                        <thead class="bg-white text-xs uppercase text-gray-500 font-bold border-b">
-                            <tr>
-                                <th class="p-4 w-16 text-center">ID</th>
-                                <th class="p-4 w-1/4">Nombre</th>
-                                <th class="p-4">Descripción</th>
-                                <th class="p-4 w-24 text-center">Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-gray-100">
+                <div class="max-h-136 space-y-3 overflow-y-auto p-4 pr-3 lg:max-h-[calc(100vh-18rem)]">
+                    <article v-for="tipo in filteredTipos" :key="tipo.id"
+                        class="rounded-xl border border-gray-200 bg-white p-4 shadow-sm transition hover:border-orange-200 hover:shadow-md">
+                        <div class="space-y-4">
+                            <div class="flex items-start gap-4 min-w-0">
+                                <div
+                                    class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-orange-100 text-sm font-bold text-orange-700">
+                                    {{ tipo.nombre.slice(0, 2).toUpperCase() }}
+                                </div>
 
-                            <tr v-for="tipo in filteredTipos" :key="tipo.id" class="hover:bg-gray-50 transition-colors">
-                                <td class="p-4 text-center font-mono text-gray-400">#{{ tipo.id }}</td>
-                                <td class="p-4 font-semibold text-gray-800">{{ tipo.nombre }}</td>
-                                <td class="p-4 text-gray-500 truncate max-w-50">{{ tipo.descripcion || 'Sin descripción'
-                                }}</td>
-                                <td class="p-4 flex justify-center gap-3">
+                                <div class="min-w-0 flex-1 space-y-2">
+                                    <div
+                                        class="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between sm:gap-4">
+                                        <h3 class="font-semibold text-gray-900">{{ tipo.nombre }}</h3>
+                                        <span
+                                            class="w-fit rounded-full bg-slate-100 px-2.5 py-1 text-xs font-mono font-semibold text-slate-500">
+                                            #{{ tipo.id }}
+                                        </span>
+                                    </div>
+
+                                    <p class="text-sm leading-5 text-gray-500 wrap-anywhere">
+                                        {{ tipo.descripcion || 'Sin descripción' }}
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="flex justify-end border-t border-gray-100 pt-3">
+                                <div class="flex flex-wrap items-center justify-end gap-2">
                                     <button type="button" @click="startEdit(tipo)"
-                                        class="text-orange-600 hover:text-orange-800 hover:underline text-xs font-semibold">Editar</button>
+                                        class="rounded-lg border border-orange-200 px-3 py-1.5 text-xs font-semibold text-orange-700 transition hover:bg-orange-50">
+                                        Editar
+                                    </button>
                                     <button type="button" @click="removeTipo(tipo.id)"
-                                        class="text-red-600 hover:text-red-800 hover:underline text-xs font-semibold">Borrar</button>
-                                </td>
-                            </tr>
+                                        class="rounded-lg border border-red-200 px-3 py-1.5 text-xs font-semibold text-red-700 transition hover:bg-red-50">
+                                        Borrar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
 
-                        </tbody>
-                    </table>
+                    <div v-if="filteredTipos.length === 0"
+                        class="rounded-xl border border-dashed border-gray-300 bg-gray-50 p-6 text-center text-sm text-gray-500">
+                        No hay categorías que coincidan con la búsqueda.
+                    </div>
                 </div>
             </div>
 

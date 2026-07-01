@@ -12,5 +12,5 @@
   <circle cx="168" cy="260" r="18" fill="#9ca3af"/>
   <circle cx="472" cy="260" r="18" fill="#9ca3af"/>
   <text x="50%" y="82" text-anchor="middle" font-family="Arial, sans-serif" font-size="30" font-weight="700" fill="#0f172a">Toyota Yaris</text>
-  <text x="50%" y="320" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" fill="#0f172a">Auto de ejemplo para AutoRent</text>
+  <text x="50%" y="320" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" fill="#0f172a">Auto de ejemplo para SansaTorMotors</text>
 </svg>

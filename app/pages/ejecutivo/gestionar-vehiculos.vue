@@ -110,71 +110,85 @@ const deleteVehiculo = async (vehiculoId: number) => {
     <p v-if="errorMessage" class="text-sm text-red-600">{{ errorMessage }}</p>
 
     <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-      <table class="w-full text-left text-sm text-gray-600">
-        <thead class="bg-white text-xs uppercase text-gray-500 font-bold border-b">
-          <tr>
-            <th class="p-4 w-24">Foto</th>
-            <th class="p-4">Patente</th>
-            <th class="p-4">Vehículo</th>
-            <th class="p-4">Estado Actual</th>
-            <th class="p-4 text-center">Acciones</th>
-          </tr>
-        </thead>
-        <tbody class="divide-y divide-gray-100">
-          <tr v-for="vehiculo in filteredVehiculos" :key="vehiculo.id" class="hover:bg-gray-50 transition-colors">
-            <td class="p-4">
+      <div class="p-4 bg-gray-50 border-b flex flex-col sm:flex-row justify-between sm:items-center gap-3">
+        <div>
+          <h2 class="font-semibold text-gray-700">Vehículos Registrados</h2>
+          <p class="text-xs text-gray-500">{{ filteredVehiculos.length }} vehículo{{ filteredVehiculos.length === 1 ? ''
+            : 's' }} encontrado{{ filteredVehiculos.length === 1 ? '' : 's' }}</p>
+        </div>
+        <span class="text-xs text-gray-500">Estados operativos de la flota</span>
+      </div>
+
+      <div class="max-h-96 space-y-3 overflow-y-auto p-4 pr-3">
+        <article v-for="vehiculo in filteredVehiculos" :key="vehiculo.id"
+          class="rounded-xl border border-gray-200 bg-white p-4 shadow-sm transition hover:border-orange-200 hover:shadow-md">
+          <div class="space-y-4">
+            <div class="flex items-start gap-4 min-w-0">
               <img :src="getVehicleImage(vehiculo.fotografia)" alt="Fotografía del vehículo"
-                class="h-12 w-16 rounded object-cover border border-gray-200" />
-            </td>
-            <td class="p-4 font-mono font-medium text-gray-900">{{ vehiculo.patente }}</td>
-            <td class="p-4">
-              <p class="font-semibold text-gray-800">{{ vehiculo.marca }} {{ vehiculo.modelo }}</p>
-              <p class="text-xs text-gray-500">{{ vehiculo.tipo }}</p>
-            </td>
-            <td class="p-4">
-              <span class="px-2.5 py-1 rounded-full text-xs font-semibold" :class="{
-                'bg-green-100 text-green-700': vehiculo.estado === 'Disponible',
-                'bg-amber-100 text-amber-700': vehiculo.estado === 'Arrendado',
-                'bg-red-100 text-red-700': vehiculo.estado === 'En mantenimiento',
-                'bg-gray-200 text-gray-700': vehiculo.estado === 'De baja'
-              }">{{ vehiculo.estado }}</span>
-            </td>
-            <td class="p-4 text-center">
-              <div class="flex flex-wrap items-center justify-center gap-2">
-                <span v-if="vehiculo.estado === 'Arrendado'" class="text-xs text-gray-500">Vehículo con arriendo
-                  vigente. No hay acciones disponibles en este módulo.</span>
+                class="h-16 w-20 shrink-0 rounded-xl object-cover border border-gray-200 bg-gray-50" />
+
+              <div class="min-w-0 flex-1 space-y-3">
+                <div class="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between sm:gap-4">
+                  <h3 class="font-semibold text-gray-900 wrap-anywhere">{{ vehiculo.marca }} {{ vehiculo.modelo }}</h3>
+                  <p class="font-mono text-sm text-gray-500">{{ vehiculo.patente }}</p>
+                </div>
+
+                <div class="flex flex-wrap items-center gap-2">
+                  <span class="px-2.5 py-1 rounded-full text-xs font-semibold" :class="{
+                    'bg-green-100 text-green-700': vehiculo.estado === 'Disponible',
+                    'bg-amber-100 text-amber-700': vehiculo.estado === 'Arrendado',
+                    'bg-red-100 text-red-700': vehiculo.estado === 'En mantenimiento',
+                    'bg-gray-200 text-gray-700': vehiculo.estado === 'De baja'
+                  }">{{ vehiculo.estado }}</span>
+                  <span class="px-2.5 py-1 rounded-full bg-slate-100 text-xs font-semibold text-slate-600">
+                    {{ vehiculo.tipo }}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex justify-end border-t border-gray-100 pt-3">
+              <div class="flex flex-wrap items-center justify-end gap-2">
+                <span v-if="vehiculo.estado === 'Arrendado'" class="text-xs text-gray-500 wrap-anywhere">Vehículo con
+                  arriendo vigente. No hay acciones disponibles en este módulo.</span>
 
                 <button
                   v-if="vehiculo.estado !== 'En mantenimiento' && vehiculo.estado !== 'Arrendado' && vehiculo.estado !== 'De baja'"
-                  type="button" class="text-amber-600 hover:text-amber-800 hover:underline text-xs font-semibold"
+                  type="button"
+                  class="rounded-lg border border-amber-200 px-3 py-1.5 text-xs font-semibold text-amber-700 transition hover:bg-amber-50 disabled:opacity-60"
                   :disabled="updatingVehiculoId === vehiculo.id" @click="updateState(vehiculo.id, 'En mantenimiento')">
                   Mantenimiento
                 </button>
 
                 <button
                   v-if="vehiculo.estado !== 'De baja' && vehiculo.estado !== 'Arrendado' && vehiculo.estado !== 'En mantenimiento'"
-                  type="button" class="text-red-600 hover:text-red-800 hover:underline text-xs font-semibold"
+                  type="button"
+                  class="rounded-lg border border-red-200 px-3 py-1.5 text-xs font-semibold text-red-700 transition hover:bg-red-50 disabled:opacity-60"
                   :disabled="updatingVehiculoId === vehiculo.id" @click="updateState(vehiculo.id, 'De baja')">
                   Dar de baja
                 </button>
 
                 <button v-if="vehiculo.estado === 'En mantenimiento' || vehiculo.estado === 'De baja'" type="button"
-                  class="text-orange-600 hover:text-orange-800 hover:underline text-xs font-semibold"
+                  class="rounded-lg border border-orange-200 px-3 py-1.5 text-xs font-semibold text-orange-700 transition hover:bg-orange-50 disabled:opacity-60"
                   :disabled="updatingVehiculoId === vehiculo.id" @click="updateState(vehiculo.id, 'Disponible')">
                   Habilitar
                 </button>
 
                 <button v-if="vehiculo.estado === 'De baja'" type="button"
-                  class="text-red-700 hover:text-red-900 hover:underline text-xs font-semibold"
+                  class="rounded-lg border border-red-300 px-3 py-1.5 text-xs font-semibold text-red-800 transition hover:bg-red-50 disabled:opacity-60"
                   :disabled="updatingVehiculoId === vehiculo.id" @click="deleteVehiculo(vehiculo.id)">
                   Eliminar
                 </button>
-
               </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+            </div>
+          </div>
+        </article>
+
+        <div v-if="filteredVehiculos.length === 0"
+          class="rounded-xl border border-dashed border-gray-300 bg-gray-50 p-6 text-center text-sm text-gray-500">
+          No hay vehículos que coincidan con la búsqueda.
+        </div>
+      </div>
     </div>
   </div>
 </template>

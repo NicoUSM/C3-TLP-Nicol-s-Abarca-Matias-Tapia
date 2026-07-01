@@ -4,7 +4,7 @@ import { resolve } from 'node:path'
 import { PrismaMariaDb } from '@prisma/adapter-mariadb'
 import type { PrismaClient as PrismaClientType } from '../../generated/prisma/index.js'
 
-dotenv.config({ path: 'conexion.env' })
+dotenv.config({ path: 'conexion.env', override: true })
 
 const require = createRequire(import.meta.url)
 const prismaClientModule = require(resolve(process.cwd(), 'generated/prisma/index.js'))

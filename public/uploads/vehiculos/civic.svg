@@ -12,5 +12,5 @@
   <circle cx="160" cy="258" r="18" fill="#d1d5db"/>
   <circle cx="480" cy="258" r="18" fill="#d1d5db"/>
   <text x="50%" y="82" text-anchor="middle" font-family="Arial, sans-serif" font-size="30" font-weight="700" fill="#052e16">Honda Civic</text>
-  <text x="50%" y="320" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" fill="#052e16">Auto de ejemplo para AutoRent</text>
+  <text x="50%" y="320" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" fill="#052e16">Auto de ejemplo para SansaTorMotors</text>
 </svg>

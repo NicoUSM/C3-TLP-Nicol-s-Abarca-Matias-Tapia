@@ -50,7 +50,8 @@ const submitLogin = async () => {
 <template>
     <div class="bg-white p-8 rounded-xl shadow-lg w-full max-w-md border border-gray-200">
         <div class="text-center mb-8">
-            <img src="/uploads/AutoRent.jpeg" alt="AutoRent" class="h-28 md:h-32 w-auto mx-auto mb-3 object-contain" />
+            <img src="/uploads/SansaTorMotors.png" alt="SansaTorMotors"
+                class="h-28 md:h-32 w-auto mx-auto mb-3 object-contain" />
             <p class="text-gray-500">Ingresa tus credenciales para continuar</p>
         </div>
 

@@ -28,16 +28,16 @@ const handleLogout = async () => {
     <div
         class="relative min-h-screen bg-linear-to-br from-orange-50 via-amber-50 to-orange-100 p-4 md:p-6 overflow-hidden">
         <div class="pointer-events-none fixed inset-0 z-0 flex items-center justify-center">
-            <img src="/uploads/AutoRent.jpeg" alt="" aria-hidden="true"
+            <img src="/uploads/SansaTorMotors.png" alt="" aria-hidden="true"
                 class="w-304 max-w-[92vw] object-contain opacity-12 blur-[5px] select-none" />
         </div>
 
         <header
             class="z-20 sticky top-4 rounded-2xl border border-white/60 bg-white/70 px-5 py-4 shadow-[0_12px_40px_-18px_rgba(14,116,144,0.55)] backdrop-blur-md flex justify-between items-center">
             <div class="text-xl font-bold flex items-center gap-2 text-slate-800">
-                <img v-if="!logoLoadError" src="/uploads/AutoRent.jpeg" alt="AutoRent"
+                <img v-if="!logoLoadError" src="/uploads/SansaTorMotors.png" alt="SansaTorMotors"
                     class="h-10 w-auto object-contain" @error="logoLoadError = true" />
-                <span v-else>🚗 AutoRent</span>
+                <span v-else>SansaTorMotors</span>
             </div>
 
             <div class="flex gap-4 items-center">

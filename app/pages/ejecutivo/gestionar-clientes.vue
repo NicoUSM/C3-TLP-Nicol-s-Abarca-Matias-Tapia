@@ -199,57 +199,83 @@ const removeCliente = async (clienteId: number) => {
             </div>
 
             <div class="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-                <div class="p-4 bg-gray-50 border-b flex justify-between items-center gap-4">
-                    <h2 class="font-semibold text-gray-700">Clientes Registrados</h2>
+                <div class="p-4 bg-gray-50 border-b flex flex-col sm:flex-row justify-between sm:items-center gap-3">
+                    <div>
+                        <h2 class="font-semibold text-gray-700">Clientes Registrados</h2>
+                        <p class="text-xs text-gray-500">{{ filteredClientes.length }} cliente{{ filteredClientes.length
+                            === 1 ? '' : 's' }} encontrado{{ filteredClientes.length === 1 ? '' : 's' }}</p>
+                    </div>
                     <span class="text-xs text-gray-500">Historial de arriendos incluido</span>
                 </div>
 
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left text-sm text-gray-600">
-                        <thead class="bg-white text-xs uppercase text-gray-500 font-bold border-b">
-                            <tr>
-                                <th class="p-4">Cliente</th>
-                                <th class="p-4">Contacto</th>
-                                <th class="p-4 text-center">Vigentes</th>
-                                <th class="p-4 text-center">Históricos</th>
-                                <th class="p-4">Último Vehículo</th>
-                                <th class="p-4 text-center">Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-gray-100">
-                            <tr v-for="cliente in filteredClientes" :key="cliente.id"
-                                class="hover:bg-gray-50 transition-colors">
-                                <td class="p-4">
-                                    <p class="font-mono font-medium text-gray-900">{{ cliente.rut }}</p>
-                                    <p class="font-semibold text-gray-800">{{ cliente.nombre }}</p>
-                                </td>
-                                <td class="p-4 text-gray-600">
-                                    <p>{{ cliente.telefono || 'Sin teléfono' }}</p>
-                                    <p>{{ cliente.email || 'Sin correo' }}</p>
-                                    <p class="text-xs text-gray-400">{{ cliente.direccion || 'Sin dirección' }}</p>
-                                </td>
-                                <td class="p-4 text-center">
-                                    <span class="px-2 py-1 rounded-full text-xs font-semibold"
-                                        :class="cliente.arriendosVigentes > 0 ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600'">
-                                        {{ cliente.arriendosVigentes }}
-                                    </span>
-                                </td>
-                                <td class="p-4 text-center font-semibold text-gray-800">{{ cliente.arriendosHistoricos
-                                    }}</td>
-                                <td class="p-4 text-gray-600">{{ cliente.ultimoVehiculo }}</td>
-                                <td class="p-4 text-center">
-                                    <div class="flex items-center justify-center gap-3">
-                                        <button type="button"
-                                            class="text-orange-600 hover:text-orange-800 hover:underline text-xs font-semibold"
-                                            @click="startEdit(cliente)">Editar</button>
-                                        <button type="button"
-                                            class="text-red-600 hover:text-red-800 hover:underline text-xs font-semibold"
-                                            @click="removeCliente(cliente.id)">Borrar</button>
+                <div class="max-h-136 space-y-3 overflow-y-auto p-4 pr-3 lg:max-h-[calc(100vh-18rem)]">
+                    <article v-for="cliente in filteredClientes" :key="cliente.id"
+                        class="rounded-xl border border-gray-200 bg-white p-4 shadow-sm transition hover:border-orange-200 hover:shadow-md">
+                        <div class="space-y-4">
+                            <div class="flex items-start gap-4 min-w-0">
+                                <div
+                                    class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-orange-100 text-sm font-bold text-orange-700">
+                                    {{ cliente.nombre.slice(0, 2).toUpperCase() }}
+                                </div>
+
+                                <div class="min-w-0 flex-1 space-y-3">
+                                    <div
+                                        class="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between sm:gap-4">
+                                        <h3 class="font-semibold text-gray-900">{{ cliente.nombre }}</h3>
+                                        <p class="font-mono text-sm text-gray-500">{{ cliente.rut }}</p>
                                     </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+
+                                    <div class="grid gap-3 text-sm text-gray-600 md:grid-cols-2">
+                                        <div class="space-y-1 min-w-0">
+                                            <p class="wrap-anywhere">{{ cliente.telefono || 'Sin teléfono' }}</p>
+                                            <p class="wrap-anywhere">{{ cliente.email || 'Sin correo' }}</p>
+                                            <p class="text-xs leading-5 text-gray-400 wrap-anywhere">{{
+                                                cliente.direccion || 'Sin dirección' }}</p>
+                                        </div>
+
+                                        <div class="space-y-2 min-w-0 md:text-right">
+                                            <p class="text-xs font-semibold uppercase text-gray-400">Último vehículo</p>
+                                            <p class="text-sm text-gray-700 wrap-anywhere">{{ cliente.ultimoVehiculo }}
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <div class="flex flex-wrap items-center gap-2">
+                                        <span class="px-2.5 py-1 rounded-full text-xs font-semibold"
+                                            :class="cliente.arriendosVigentes > 0 ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600'">
+                                            {{ cliente.arriendosVigentes }} vigente{{ cliente.arriendosVigentes === 1 ?
+                                            '' : 's' }}
+                                        </span>
+                                        <span
+                                            class="px-2.5 py-1 rounded-full bg-slate-100 text-xs font-semibold text-slate-600">
+                                            {{ cliente.arriendosHistoricos }} histórico{{ cliente.arriendosHistoricos
+                                            === 1 ? '' : 's' }}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="flex justify-end border-t border-gray-100 pt-3">
+                                <div class="flex flex-wrap items-center justify-end gap-2">
+                                    <button type="button"
+                                        class="rounded-lg border border-orange-200 px-3 py-1.5 text-xs font-semibold text-orange-700 transition hover:bg-orange-50"
+                                        @click="startEdit(cliente)">
+                                        Editar
+                                    </button>
+                                    <button type="button"
+                                        class="rounded-lg border border-red-200 px-3 py-1.5 text-xs font-semibold text-red-700 transition hover:bg-red-50"
+                                        @click="removeCliente(cliente.id)">
+                                        Borrar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <div v-if="filteredClientes.length === 0"
+                        class="rounded-xl border border-dashed border-gray-300 bg-gray-50 p-6 text-center text-sm text-gray-500">
+                        No hay clientes que coincidan con la búsqueda.
+                    </div>
                 </div>
             </div>
         </div>
